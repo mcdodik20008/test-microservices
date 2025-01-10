@@ -19,7 +19,7 @@ spring:
     show-sql: true
 
   kafka:
-    bootstrap-servers: htpp://kafka:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: animal-service-group
       auto-offset-reset: earliest
