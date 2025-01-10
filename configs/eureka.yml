@@ -1,3 +1,9 @@
+spring:
+  application:
+    name: registry-eureka
+server:
+  port: 8761
+
 management:
   endpoints:
     web:
