@@ -1,21 +1,27 @@
+server:
+  port: 8081
+
 spring:
   application:
-    name: ${APP_NAME:animal-service-local}
+    name: animal-service
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost:5432}/${DB_NAME:animal}
-    username: ${DB_NAME:animal}
-    password: ${DB_PASSWORD:1234}
+    url: jdbc:postgresql://animal_db/animal
+    username: animal
+    password: 1234
     driver-class-name: org.postgresql.Driver
 
   jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+      ddl-auto: update
     show-sql: true
 
   kafka:
-    bootstrap-servers: ${BOOTSTRAP:localhost:9092}
+    bootstrap-servers: htpp://kafka:9092
     consumer:
-      group-id: ${KAFKA_GROUP:animal-service-group}
+      group-id: animal-service-group
       auto-offset-reset: earliest
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -24,7 +30,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+      defaultZone: http://registry-eureka:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
 
