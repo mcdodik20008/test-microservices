@@ -1,8 +1,38 @@
 spring:
+  application:
+    name: ${APP_NAME:animal-service-local}
   datasource:
-    url: jdbc:mysql://localhost:3306/mydb
-    username: myuser
-    password: mypassword
-custom:
-  feature:
-    enabled: true
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/${DB_NAME:animal}
+    username: ${DB_NAME:animal}
+    password: ${DB_PASSWORD:1234}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+    show-sql: true
+
+  kafka:
+    bootstrap-servers: ${BOOTSTRAP:localhost:9092}
+    consumer:
+      group-id: ${KAFKA_GROUP:animal-service-group}
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVICE_URL:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    binders:
+      enabled: true
