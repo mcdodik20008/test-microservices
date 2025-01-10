@@ -1,0 +1,72 @@
+version: '3.9'
+services:
+
+# region Services
+  registry-eureka-docker:
+    build:
+      context: ./registry-eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - APP_NAME=registry-eureka
+      - SERVER_PORT=8761
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=prometheus,health,info
+      - EUREKA_SERVICE_URL=http://registry-eureka:8761/eureka/
+    networks:
+      - base-network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_NAME=api-gateway
+      - SERVER_PORT=8080
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=prometheus,health,info
+      - EUREKA_SERVICE_URL=http://registry-eureka:8761/eureka/
+    networks:
+      - base-network
+# endregion
+
+  animal:
+    build:
+      context: ./animals
+    ports:
+      - "8081:8081"
+    env_file:
+      - "animals/.env"
+
+  prometheus:
+    extends:
+      file: docker-compose-monitoring.yml
+      service: prometheus
+    networks:
+      - base-network
+
+  grafana:
+    extends:
+      file: docker-compose-monitoring.yml
+      service: grafana
+    networks:
+      - base-network
+
+  kafka:
+    extends:
+      file: docker-compose-kafka.yml
+      service: kafka
+    networks:
+      - base-network
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    extends:
+      file: docker-compose-kafka.yml
+      service: zookeeper
+    networks:
+      - base-network
+
+networks:
+  base-network:
+    driver: bridge
