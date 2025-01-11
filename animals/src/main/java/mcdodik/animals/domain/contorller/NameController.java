@@ -14,7 +14,7 @@ public class NameController {
     private String databaseUrl;
 
 
-    @GetMapping("/")
+    @GetMapping(value = {"/", "/test/red"})
     public Map<String, String> getDatabaseInfo() {
         Map<String, String> dbInfo = new HashMap<>();
         dbInfo.put("name", databaseUrl);

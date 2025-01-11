@@ -24,11 +24,16 @@ public class ApiGatewayApplication {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         var routes = builder.routes();
 
-        routes.route("eureka-server-route", r -> r
-                .path("/eureka/**")
-                .filters(f -> f.stripPrefix(1))
-                .uri("http://registry-eureka:8761")
-        );
+        routes
+                .route("eureka-server-route", r -> r
+                        .path("/eureka/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("http://registry-eureka:8761"))
+                .route("animal-route", r -> r
+                        .path("/animal/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("http://animal:8081")
+                );
 
         return routes.build();
     }
@@ -38,11 +43,16 @@ public class ApiGatewayApplication {
     public RouteLocator customRouteLocatorLocal(RouteLocatorBuilder builder) {
         var routes = builder.routes();
 
-        routes.route("eureka-server-route", r -> r
-                .path("/eureka/**")
-                .filters(f -> f.stripPrefix(1))
-                .uri("http://localhost:8761")
-        );
+        routes
+                .route("eureka-server-route", r -> r
+                        .path("/eureka/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("http://localhost:8761")
+                ).route("animal-route", r -> r
+                        .path("/animal/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("http://localhost:8081")
+                );
 
         return routes.build();
     }
