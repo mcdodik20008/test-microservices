@@ -8,10 +8,10 @@
 		<version>3.4.1</version>
 	</parent>
 	<groupId>mcdodik</groupId>
-	<artifactId>configs</artifactId>
+	<artifactId>config-server</artifactId>
 	<version>0.0.1</version>
-	<name>configs</name>
-	<description>configs</description>
+	<name>config-server</name>
+	<description>config-server</description>
 
 	<properties>
 		<java.version>17</java.version>
@@ -46,6 +46,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

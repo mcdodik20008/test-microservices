@@ -1,16 +1,29 @@
 version: '3.9'
 services:
 
-# region Services
-  registry-eureka-docker:
+  # region Services
+  registry-eureka:
     build:
       context: ./registry-eureka
+    restart: always
     ports:
       - "8761:8761"
     environment:
-      - APP_NAME=registry-eureka
-      - SERVER_PORT=8761
-      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=prometheus,health,info
+      - CONFIG_HOST=http://config-server:8888
+      - CONFIG_NAME=eureka
+      - CONFIG_PROFILE=default
+    networks:
+      - base-network
+    depends_on:
+      - config-server
+
+  config-server:
+    build:
+      context: ./config-server
+    restart: always
+    ports:
+      - "8888:8888"
+    environment:
       - EUREKA_SERVICE_URL=http://registry-eureka:8761/eureka/
     networks:
       - base-network
@@ -18,24 +31,51 @@ services:
   api-gateway:
     build:
       context: ./api-gateway
+    restart: always
     ports:
       - "8080:8080"
     environment:
-      - APP_NAME=api-gateway
-      - SERVER_PORT=8080
-      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=prometheus,health,info
-      - EUREKA_SERVICE_URL=http://registry-eureka:8761/eureka/
+      - CONFIG_HOST=http://config-server:8888
+      - CONFIG_NAME=api-gateway
+      - CONFIG_PROFILE=default
     networks:
       - base-network
-# endregion
+    depends_on:
+      - config-server
+  # endregion
 
+  # region Apps
   animal:
     build:
       context: ./animals
+    restart: always
+    environment:
+      - CONFIG_HOST=http://config-server:8888
+      - CONFIG_NAME=animals
+      - CONFIG_PROFILE=default
     ports:
       - "8081:8081"
-    env_file:
-      - "animals/.env"
+    depends_on:
+      - config-server
+      - animal_db
+    networks:
+      - base-network
+
+  animal_db:
+    image: postgres:15
+    container_name: animal_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: animal
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: animal
+    networks:
+      - base-network
+  # endregion
+
+  # region Extends
 
   prometheus:
     extends:
@@ -66,6 +106,8 @@ services:
       service: zookeeper
     networks:
       - base-network
+
+  # endregion
 
 networks:
   base-network:
