@@ -1,7 +1,3 @@
-# Список приложений для сборки
-$apps = @("animals", "api-gateway", "config-server", "registry-eureka")
-
-# Функция для сборки Spring Boot приложения
 function Build-App($appDir) {
     Write-Host "Building $appDir..."
     Set-Location $appDir
@@ -13,7 +9,8 @@ function Build-App($appDir) {
     Set-Location ..
 }
 
-# Сборка всех приложений
+$apps = @("animals", "api-gateway", "config-server", "registry-eureka")
+
 foreach ($app in $apps) {
     if (Test-Path $app) {
         Build-App $app
@@ -22,7 +19,6 @@ foreach ($app in $apps) {
     }
 }
 
-# Запуск основного docker-compose файла
 Write-Host "Starting Docker Compose..."
 docker-compose -f docker-compose.yml up --build -d
 

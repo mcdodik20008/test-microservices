@@ -21,11 +21,12 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
     consumer:
-      group-id: animal-service-group
+      group-id: animal-group
       auto-offset-reset: earliest
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
 
 eureka:
   client:

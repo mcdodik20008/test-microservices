@@ -3,7 +3,6 @@ package mcdodik.apigateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -26,13 +25,13 @@ public class ApiGatewayApplication {
 
         routes
                 .route("eureka-server-route", r -> r
-                        .path("/eureka/**")
+                        .path("/api/eureka/**")
                         .filters(f -> f.stripPrefix(1))
                         .uri("http://registry-eureka:8761"))
                 .route("animal-route", r -> r
-                        .path("/animal/**")
+                        .path("/api/animal/**")
                         .filters(f -> f.stripPrefix(1))
-                        .uri("http://animal:8081")
+                        .uri("http://animal:8081/animal/")
                 );
 
         return routes.build();
@@ -45,11 +44,11 @@ public class ApiGatewayApplication {
 
         routes
                 .route("eureka-server-route", r -> r
-                        .path("/eureka/**")
+                        .path("/api/eureka/**")
                         .filters(f -> f.stripPrefix(1))
                         .uri("http://localhost:8761")
                 ).route("animal-route", r -> r
-                        .path("/animal/**")
+                        .path("/api/animal/**")
                         .filters(f -> f.stripPrefix(1))
                         .uri("http://localhost:8081")
                 );
